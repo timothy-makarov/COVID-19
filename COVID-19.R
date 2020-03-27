@@ -34,7 +34,8 @@ df <- data.frame(
     367,
     438,    # https://t.me/map_mind/3435
     658,    # https://t.me/COVID2019_official/100
-    840     # https://t.me/c/1433624845/1550
+    840,    # https://t.me/c/1433624845/1550
+    1036    # https://t.me/COVID2019_official/113
   )
 )
 
@@ -58,7 +59,7 @@ ggplot(df, aes(days_since_mar01, no_trend, colour = inc)) +
   geom_line() +
   geom_smooth(method = lm, formula = y ~ x)
 
-frcst_date <- as.Date('2020-03-27')
+frcst_date <- as.Date('2020-03-30')
 dsm01 <- as.numeric(frcst_date - as.Date('2020-03-01')) + 1
 frcst_infected <- floor(2 ^ (k * dsm01 + b))
 frcst_infected
