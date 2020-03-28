@@ -32,10 +32,11 @@ df <- data.frame(
     253,
     306,
     367,
-    438,    # https://t.me/map_mind/3435
-    658,    # https://t.me/COVID2019_official/100
-    840,    # https://t.me/c/1433624845/1550
-    1036    # https://t.me/COVID2019_official/113
+    438,   # https://t.me/map_mind/3435
+    658,   # https://t.me/COVID2019_official/100
+    840,   # https://t.me/c/1433624845/1550
+    1036,  # https://t.me/COVID2019_official/113
+    1264   # https://t.me/COVID2019_official/121
   )
 )
 
@@ -45,11 +46,14 @@ df$infected_log <- log2(df$infected)
 
 ggplot(df, aes(days_since_mar01, infected_log, colour = inc)) +
   geom_point() +
-  geom_smooth(method = lm, formula = y ~ x)
+  geom_smooth(method = lm, formula = y ~ x) +
+  ggtitle('Total number of infected in a log scale') +
+  theme(plot.title = element_text(hjust = 0.5))
 
 lm1 <- lm(formula = infected_log ~ days_since_mar01, data = df)
 k <- lm1$coefficients[[2]]
 b <- lm1$coefficients[[1]]
+paste0('2^(', k, '*t + ', b, ')')
 
 df$no_trend <- df$days_since_mar01 * k + b - df$infected_log
 t.test(df$no_trend)
@@ -57,9 +61,11 @@ t.test(df$no_trend)
 ggplot(df, aes(days_since_mar01, no_trend, colour = inc)) +
   geom_point() +
   geom_line() +
-  geom_smooth(method = lm, formula = y ~ x)
+  geom_smooth(method = lm, formula = y ~ x) +
+  ggtitle('Deviations of infected near the trend line in a log scale') +
+  theme(plot.title = element_text(hjust = 0.5))
 
-frcst_date <- as.Date('2020-03-30')
+frcst_date <- as.Date('2020-03-29')
 dsm01 <- as.numeric(frcst_date - as.Date('2020-03-01')) + 1
 frcst_infected <- floor(2 ^ (k * dsm01 + b))
 frcst_infected
