@@ -1,12 +1,26 @@
-#
-# From Russia with COVID-19
-# https://gist.github.com/timothy-makarov/c5a8d382aaa646fea47d4e0beb354e91
-#
+---
+title: "COVID-19"
+author: ""
+date: ""
+output: 
+  pdf_document:
+    latex_engine: pdflatex
+classoption: landscape
+header-includes:
+  - \usepackage[russian]{babel}
+---
 
-library(ggplot2)
-
+```{r setup,include=FALSE}
 rm(list = ls())
 
+library(knitr)
+library(dplyr)
+library(ggplot2)
+
+opts_chunk$set(echo = FALSE, cache = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r data, include=FALSE}
 df <- data.frame(
   infected = c(
     1,
@@ -37,8 +51,7 @@ df <- data.frame(
     840,   # https://t.me/c/1433624845/1550
     1036,  # https://t.me/COVID2019_official/113
     1264,  # https://t.me/COVID2019_official/121
-    1534,  # https://t.me/COVID2019_official/128
-    1836   # https://t.me/COVID2019_official/138
+    1534   # https://t.me/COVID2019_official/128
   )
 )
 
@@ -49,36 +62,42 @@ df$infected_log <- log2(df$infected)
 lm1 <- lm(formula = infected_log ~ days_since_mar01, data = df)
 k <- lm1$coefficients[[2]]
 b <- lm1$coefficients[[1]]
+paste0('2^(', k, '*t + ', b, ')')
 
 df$no_trend <- df$days_since_mar01 * k + b - df$infected_log
 t.test(df$no_trend)
 
-frcst_date <- as.Date('2020-03-31')
+frcst_date <- as.Date('2020-03-29')
 dsm01 <- as.numeric(frcst_date - as.Date('2020-03-01')) + 1
 frcst_infected <- floor(2 ^ (k * dsm01 + b))
-frcst_infected
 
 pop <- 1E+4
 pop_log <- log2(pop)
 pop_dsm01 <- (pop_log - b) / k
 pop_dsm01_cal <- as.Date('2020-03-01') + pop_dsm01
-pop_dsm01_cal
+```
 
+```{r charts1}
 ggplot(df, aes(days_since_mar01, infected, colour = inc)) +
   geom_line() +
   geom_point() +
   ggtitle('Total number of infected') +
   theme(plot.title = element_text(hjust = 0.5))
+```
 
+```{r charts2}
 ggplot(df, aes(days_since_mar01, infected_log, colour = inc)) +
   geom_point() +
   geom_smooth(method = lm, formula = y ~ x) +
   ggtitle('Total number of infected in a log scale') +
   theme(plot.title = element_text(hjust = 0.5))
+```
 
+```{r charts3}
 ggplot(df, aes(days_since_mar01, no_trend, colour = inc)) +
   geom_point() +
   geom_line() +
   geom_smooth(method = lm, formula = y ~ x) +
   ggtitle('Deviations of infected near the trend line in a log scale') +
   theme(plot.title = element_text(hjust = 0.5))
+```
