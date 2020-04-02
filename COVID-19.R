@@ -41,7 +41,8 @@ df <- data.frame(
     1534,  # https://t.me/COVID2019_official/128
     1836,  # https://t.me/COVID2019_official/138
     2337,  # https://t.me/COVID2019_official/153
-    2777   # https://t.me/COVID2019_official/160
+    2777,  # https://t.me/COVID2019_official/160
+    3548   # https://t.me/COVID2019_official/168
   )
 )
 
@@ -51,43 +52,34 @@ df$growth <- c(1, diff(df$infected))
 df$infected_log <- log2(df$infected)
 
 df <- df %>%
+  select(date, day0, growth, infected, infected_log)
+
+df <- df %>%
   filter(infected > 10)
 
 lm1 <- lm(formula = infected_log ~ day0, data = df)
 k <- lm1$coefficients[[2]]
 b <- lm1$coefficients[[1]]
 
-df$deviations <- df$day0 * k + b - df$infected_log
-t.test(df$deviations)
+df$forecast_log <- df$day0 * k + b
+df$error_log <- df$forecast_log - df$infected_log
+t.test(df$error_log)
 
-frcst_date <- as.Date('2020-04-01')
-dsm01 <- as.numeric(frcst_date - as.Date('2020-03-01')) + 1
-frcst_infected <- floor(2 ^ (k * dsm01 + b))
-frcst_infected
-
-md <- data.frame(
-  day0 = seq(0, 180)
-)
-md$date <- md$day0 + as.Date('2020-03-01')
-
-md <- md %>%
-  filter(day0 >= first(df$day0))
+df$forecast <- round(2 ^ (df$day0 * k + b))
+df$error <- df$forecast - df$infected
 
 ggplot(df, aes(date, infected, colour = growth)) +
   geom_line() +
-  geom_point() +
-  ggtitle('Total number of infected') +
-  theme(plot.title = element_text(hjust = 0.5))
+  geom_point()
 
 ggplot(df, aes(date, infected_log, colour = growth)) +
   geom_point() +
-  geom_smooth(method = lm, formula = y ~ x) +
-  ggtitle('Total number of infected in a log scale') +
-  theme(plot.title = element_text(hjust = 0.5))
+  geom_smooth(method = lm, formula = y ~ x)
 
-ggplot(df, aes(date, deviations, colour = growth)) +
+ggplot(df, aes(date, error, colour = growth)) +
   geom_point() +
-  geom_line() +
-  geom_smooth(method = lm, formula = y ~ x) +
-  ggtitle('Deviations of infected near the trend line in a log scale') +
-  theme(plot.title = element_text(hjust = 0.5))
+  geom_smooth(method = loess, formula = y ~ x)
+
+ggplot(df, aes(date, error_log, colour = growth)) +
+  geom_point() +
+  geom_smooth(method = loess, formula = y ~ x)
