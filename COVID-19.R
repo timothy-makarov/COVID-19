@@ -1,9 +1,8 @@
 #
 # From Russia with COVID-19
-# https://gist.github.com/timothy-makarov/c5a8d382aaa646fea47d4e0beb354e91
+# https://github.com/timothy-makarov/COVID-19
 #
 
-library(deSolve)
 library(dplyr)
 library(ggplot2)
 
@@ -55,11 +54,8 @@ df$date <- as.Date('2020-03-01') + df$day0
 df$growth <- c(1, diff(df$infected))
 df$infected_log2 <- log2(df$infected)
 
-df <- df %>%
-  select(date, day0, growth, infected, infected_log2)
-
-df <- df %>%
-  filter(infected > 10)
+df <- df %>% select(date, day0, growth, infected, infected_log2)
+df <- df %>% filter(infected > 10)
 
 lm1 <- lm(formula = infected_log2 ~ day0, data = df)
 
@@ -80,11 +76,3 @@ ggplot(df, aes(date, infected_log2, colour = growth)) +
   geom_line(data = df, aes(date, lm_log2), color = 'red', size = 0.25, linetype = 'dashed') +
   geom_point(data = df, aes(date, lm_log2), color = 'red', size = 0.5) +
   geom_point()
-
-ggplot(df, aes(date, error, colour = growth)) +
-  geom_point() +
-  geom_smooth(method = loess, formula = y ~ x)
-
-ggplot(df, aes(date, error_log2, colour = growth)) +
-  geom_point() +
-  geom_smooth(method = loess, formula = y ~ x)

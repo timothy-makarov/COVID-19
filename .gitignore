@@ -2,3 +2,5 @@
 *.pdf
 *.html
 *.log
+.Rproj.user
+.Rhistory

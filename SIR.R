@@ -3,6 +3,8 @@
 # https://kingaa.github.io/thid/odes/ODEs_in_R.pdf
 #
 
+library(deSolve)
+
 # beta - transmition rate
 # gamma - recovery rate
 
