@@ -62,14 +62,12 @@ df <- df %>%
   filter(infected > 10)
 
 lm1 <- lm(formula = infected_log2 ~ day0, data = df)
-k <- lm1$coefficients[[2]]
-b <- lm1$coefficients[[1]]
 
-df$lm_log2 <- df$day0 * k + b
+df$lm_log2 <- predict(lm1, df)
 df$error_log2 <- df$lm_log2 - df$infected_log2
 t.test(df$error_log2)
 
-df$lm <- round(2 ^ (df$day0 * k + b))
+df$lm <- round(2^df$lm_log2)
 df$error <- df$lm - df$infected
 
 ggplot(df, aes(date, infected, colour = growth)) +
@@ -79,8 +77,9 @@ ggplot(df, aes(date, infected, colour = growth)) +
   geom_point()
 
 ggplot(df, aes(date, infected_log2, colour = growth)) +
-  geom_point() +
-  geom_smooth(method = lm, formula = y ~ x)
+  geom_line(data = df, aes(date, lm_log2), color = 'red', size = 0.25, linetype = 'dashed') +
+  geom_point(data = df, aes(date, lm_log2), color = 'red', size = 0.5) +
+  geom_point()
 
 ggplot(df, aes(date, error, colour = growth)) +
   geom_point() +
@@ -89,47 +88,3 @@ ggplot(df, aes(date, error, colour = growth)) +
 ggplot(df, aes(date, error_log2, colour = growth)) +
   geom_point() +
   geom_smooth(method = loess, formula = y ~ x)
-
-#
-# -=[ ODE ]=-
-# https://kingaa.github.io/thid/odes/ODEs_in_R.pdf
-#
-
-# beta - transmition rate
-# gamma - recovery rate
-
-closed.sir.model <- function(t, x, params) {
-  S <- x[1]
-  I <- x[2]
-  R <- x[3]
-  
-  beta <- params["beta"]
-  gamma <- params["gamma"]
-  
-  dSdt <- -beta * S * I
-  dIdt <- beta * S * I - gamma * I
-  dRdt <- gamma * I
-  
-  dxdt <- c(dSdt, dIdt, dRdt)
-  
-  list(dxdt)
-}
-
-params <- c(beta = 400, gamma = 365 / 13)
-
-times <- seq(from = 0, to = 60 / 365, by = 1 / 365 / 4)
-xstart <- c(S = 0.999, I = 0.001, R = 0.000)
-
-out <- as.data.frame(ode(
-  func = closed.sir.model,
-  y = xstart,
-  times = times,
-  parms = params
-))
-
-
-plot(S ~ time, data = out, type = 'l', col = 'blue')
-lines(I ~ time, data = out, col = 'brown')
-lines(R ~ time, data = out, col = 'green')
-
-paste0('R_0 = ', round(params['beta'] / params['gamma'], 2))
