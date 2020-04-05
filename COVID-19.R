@@ -36,7 +36,7 @@ df <- data.frame(
     367,
     438,   # https://t.me/map_mind/3435
     658,   # https://t.me/COVID2019_official/100
-    840,   # https://t.me/c/1433624845/1550
+    840,   # https://t.me/COVID2019_official/107
     1036,  # https://t.me/COVID2019_official/113
     1264,  # https://t.me/COVID2019_official/121
     1534,  # https://t.me/COVID2019_official/128
@@ -45,7 +45,8 @@ df <- data.frame(
     2777,  # https://t.me/COVID2019_official/160
     3548,  # https://t.me/COVID2019_official/168
     4149,  # https://t.me/COVID2019_official/179
-    4731   # https://t.me/COVID2019_official/189
+    4731,  # https://t.me/COVID2019_official/189
+    5389   # https://t.me/COVID2019_official/203
   )
 )
 
