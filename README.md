@@ -24,6 +24,9 @@ covid19-numberphile.ggb
 
 Install **GeoGebra Classic 5** from here https://www.geogebra.org/download.
 
+
+There is also a Wiki page with historical data https://github.com/timothy-makarov/COVID-19/wiki.
+
 ---
 
 Keep calm and stay social distant.
