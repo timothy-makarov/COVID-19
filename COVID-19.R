@@ -45,7 +45,9 @@ df <- data.frame(
     3548,  # https://t.me/COVID2019_official/168
     4149,  # https://t.me/COVID2019_official/179
     4731,  # https://t.me/COVID2019_official/189
-    5389   # https://t.me/COVID2019_official/203
+    5389,  # https://t.me/COVID2019_official/203
+    6343,  # https://t.me/COVID2019_official/205
+    7497   # https://t.me/COVID2019_official/212
   )
 )
 
