@@ -8,7 +8,7 @@ library(ggplot2)
 
 rm(list = ls())
 
-df <- data.frame(
+df0 <- data.frame(
   infected = c(
     1,
     2,
@@ -47,34 +47,69 @@ df <- data.frame(
     4731,  # https://t.me/COVID2019_official/189
     5389,  # https://t.me/COVID2019_official/203
     6343,  # https://t.me/COVID2019_official/205
-    7497   # https://t.me/COVID2019_official/212
+    7497,  # https://t.me/COVID2019_official/212
+    NA,    # Forecast for 5 days
+    NA,
+    NA,
+    NA,
+    NA
   )
 )
 
-df$day0 <- seq(0, length(df$infected) - 1)
-df$date <- as.Date('2020-03-01') + df$day0
-df$growth <- c(1, diff(df$infected))
-df$infected_log2 <- log2(df$infected)
+df0$day0 <- seq(0, length(df0$infected) - 1)
+df0$date <- as.Date('2020-03-01') + df0$day0
+df0$growth <- c(1, diff(df0$infected))
+df0$infected_log2 <- log2(df0$infected)
 
-df <- df %>% select(date, day0, growth, infected, infected_log2)
-df <- df %>% filter(infected > 10)
+df0 <- df0 %>% select(date, day0, growth, infected, infected_log2)
+df0 <- df0 %>% filter(day0 > 14)
 
-lm1 <- lm(formula = infected_log2 ~ day0, data = df)
+# Last 2 weeks (14 and +5 days forecast)
+df1 <- df0 %>%
+  filter(date > last(df0$date) - 19)
 
-df$lm_log2 <- predict(lm1, df)
-df$error_log2 <- df$lm_log2 - df$infected_log2
-t.test(df$error_log2)
+# Last 1 week (7 and +5 days forecast)
+df2 <- df0 %>%
+  filter(date > last(df0$date) - 12)
 
-df$lm <- round(2^df$lm_log2)
-df$error <- df$lm - df$infected
+lm0 <- lm(formula = infected_log2 ~ day0, data = df0)
+df0$lm_log2 <- predict(lm0, df0)
+df0$error_log2 <- df0$lm_log2 - df0$infected_log2
+df0$lm <- round(2 ^ df0$lm_log2)
+df0$error <- df0$lm - df0$infected
 
-ggplot(df, aes(date, infected, colour = growth)) +
-  geom_line(data = df, aes(date, lm), color = 'red', size = 0.25, linetype = 'dashed') +
-  geom_point(data = df, aes(date, lm), color = 'red', size = 0.5) +
+lm1 <- lm(formula = infected_log2 ~ day0, data = df1)
+df1$lm_log2 <- predict(lm1, df1)
+df1$lm <- round(2 ^ df1$lm_log2)
+df1$lm_growth <- c(0, diff(df1$lm))
+
+lm2 <- lm(formula = infected_log2 ~ day0, data = df2)
+df2$lm_log2 <- predict(lm2, df2)
+df2$lm <- round(2 ^ df2$lm_log2)
+df2$lm_growth <- c(0, diff(df2$lm))
+
+# Slope decrease rate
+dr <- (lm1$coefficients[[2]] - lm2$coefficients[[2]]) / 7
+# Most accurate model slope coefficient
+days_left <- round(lm2$coefficients[[2]] / dr)
+final_day <- last(df0$date) + days_left
+paste0('Epidemic ceases by ', final_day)
+
+ggplot(df0, aes(date, infected, colour = growth)) +
   geom_line() +
-  geom_point()
+  geom_point() +
+  geom_line(data = df0, aes(date, lm), color = 'red', size = 0.25, linetype = 'dashed') +
+  geom_point(data = df0, aes(date, lm), color = 'red', size = 0.5) +
+  geom_line(data = df1, aes(date, lm), color = 'blue', size = 0.25, linetype = 'dashed') +
+  geom_point(data = df1, aes(date, lm), color = 'blue', size = 0.5) +
+  geom_line(data = df2, aes(date, lm), color = 'green', size = 0.25, linetype = 'dashed') +
+  geom_point(data = df2, aes(date, lm), color = 'green', size = 0.5)
 
-ggplot(df, aes(date, infected_log2, colour = growth)) +
-  geom_line(data = df, aes(date, lm_log2), color = 'red', size = 0.25, linetype = 'dashed') +
-  geom_point(data = df, aes(date, lm_log2), color = 'red', size = 0.5) +
-  geom_point()
+ggplot(df0, aes(date, infected_log2, colour = growth)) +
+  geom_point() +
+  geom_line(data = df0, aes(date, lm_log2), color = 'red', size = 0.25, linetype = 'dashed') +
+  geom_point(data = df0, aes(date, lm_log2), color = 'red', size = 0.5) +
+  geom_line(data = df1, aes(date, lm_log2), color = 'blue', size = 0.25, linetype = 'dashed') +
+  geom_point(data = df1, aes(date, lm_log2), color = 'blue', size = 0.5) +
+  geom_line(data = df2, aes(date, lm_log2), color = 'green', size = 0.25, linetype = 'dashed') +
+  geom_point(data = df2, aes(date, lm_log2), color = 'green', size = 0.5)
