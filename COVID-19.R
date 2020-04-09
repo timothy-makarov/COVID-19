@@ -49,6 +49,7 @@ df0 <- data.frame(
     6343,  # https://t.me/COVID2019_official/205
     7497,  # https://t.me/COVID2019_official/212
     8672,  # https://t.me/COVID2019_official/220
+    10131, # https://t.me/COVID2019_official/227
     NA,    # Forecast for 5 days
     NA,
     NA,
