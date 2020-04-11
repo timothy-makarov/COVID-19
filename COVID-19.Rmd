@@ -15,25 +15,89 @@ rm(list = ls())
 library(knitr)
 library(dplyr)
 library(ggplot2)
+library(scales)
 
 opts_chunk$set(echo = FALSE, cache = FALSE, warning = FALSE, message = FALSE)
 
 source('COVID-19.R')
 ```
 
-```{r charts1,fig.align='center',dev='cairo_pdf'}
-ggplot(df, aes(date, infected, colour = growth)) +
-  geom_line() +
-  geom_point() +
-  labs(x = 'Дата', y = 'Общее число инфицированных', colour = 'Рост') +
-  theme(plot.title = element_text(hjust = 0.5))
+```{r charts_infected,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, infected), color = 'brown', size = 0.75) +
+  geom_line(
+    aes(date, infected_lm0),
+    color = 'brown',
+    size = 0.25,
+    linetype = 'dashed'
+  ) +
+  labs(x = 'Дата', y = 'Общее число инфицированных') +
+  scale_x_date(breaks = pretty_breaks(10))
 ```
 
-```{r charts2,fig.align='center',dev='cairo_pdf'}
-ggplot(df, aes(date, infected_log, colour = growth)) +
-  geom_point() +
-  geom_smooth(method = lm, formula = y ~ x) +
-  labs(x = 'Дата', y = 'log2 от общего числа инфицированных', colour = 'Рост') +
-  ggtitle('Общее число инфицированных в логарифмической шкале') +
-  theme(plot.title = element_text(hjust = 0.5))
+```{r charts_infected_log2,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, infected_log2), size = 0.75) +
+  geom_line(aes(date, infected_l2lm0),
+            size = 0.25,
+            linetype = 'dashed') +
+  labs(x = 'Дата', y = 'log2 общего числа инфицированных') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+```{r charts_removed,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, removed), size = 0.75) +
+  geom_line(aes(date, removed_lm0),
+            size = 0.25,
+            linetype = 'dashed') +
+  labs(x = 'Дата', y = 'Более не заразные') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+```{r charts_removed_log2,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, removed_log2), size = 0.75) +
+  geom_line(aes(date, removed_l2lm0),
+            size = 0.25,
+            linetype = 'dashed') +
+  labs(x = 'Дата', y = 'log2 более не заразных') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+```{r charts_infected_per_recovered,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, infected_per_recovered), size = 0.75) +
+  geom_line(aes(date, infected_per_recovered),
+            size = 0.25,
+            linetype = 'dashed') +
+  labs(x = 'Дата', y = 'Число инфицированных на 1 выздоровевшего') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+```{r charts_infected_per_deceased,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, infected_per_deceased), size = 0.75) +
+  geom_line(aes(date, infected_per_deceased),
+            size = 0.25,
+            linetype = 'dashed') +
+  labs(x = 'Дата', y = 'Число инфицированных на 1 погибшего') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+```{r charts_recovered_per_deceased,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, recovered_per_deceased), size = 0.75) +
+  geom_line(aes(date, recovered_per_deceased),
+            size = 0.25,
+            linetype = 'dashed') +
+  labs(x = 'Дата', y = 'Число выздоровевших на 1 погибшего') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+```{r datatable,comment=''}
+kable(df0_view, 
+      caption = 'Официальные данные - Оперштаб Москвы',
+      col.names = c('Дата', 'Инфицированные', 'Выздоровевшие', 'Погибшие'))
+cat(paste0('https://t.me/COVID2019_official', ' (c) ', Sys.Date()))
 ```
