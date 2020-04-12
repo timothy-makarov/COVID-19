@@ -22,6 +22,8 @@ opts_chunk$set(echo = FALSE, cache = FALSE, warning = FALSE, message = FALSE)
 source('COVID-19.R')
 ```
 
+# Инфицированные
+
 ```{r charts_infected,fig.align='center',dev='cairo_pdf'}
 ggplot(df0) +
   geom_point(aes(date, infected), color = 'brown', size = 0.75) +
@@ -45,6 +47,32 @@ ggplot(df0) +
   scale_x_date(breaks = pretty_breaks(10))
 ```
 
+# Выздоровевшие
+
+```{r charts_recovered,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, recovered), size = 0.75) +
+  geom_line(aes(date, recovered_lm0),
+            size = 0.25,
+            linetype = 'dashed') +
+  labs(x = 'Дата', y = 'Общее число выздоровевших') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+# Погибшие
+
+```{r charts_deceased,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_point(aes(date, deceased), size = 0.75) +
+  geom_line(aes(date, deceased_lm0),
+            size = 0.25,
+            linetype = 'dashed') +
+  labs(x = 'Дата', y = 'Общее число погибших') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+# Более не заразные
+
 ```{r charts_removed,fig.align='center',dev='cairo_pdf'}
 ggplot(df0) +
   geom_point(aes(date, removed), size = 0.75) +
@@ -64,6 +92,8 @@ ggplot(df0) +
   labs(x = 'Дата', y = 'log2 более не заразных') +
   scale_x_date(breaks = pretty_breaks(10))
 ```
+
+# Соотношения
 
 ```{r charts_infected_per_recovered,fig.align='center',dev='cairo_pdf'}
 ggplot(df0) +
@@ -95,9 +125,27 @@ ggplot(df0) +
   scale_x_date(breaks = pretty_breaks(10))
 ```
 
+# Данные
+
 ```{r datatable,comment=''}
-kable(df0_view, 
+kable(df0_data, 
       caption = 'Официальные данные - Оперштаб Москвы',
       col.names = c('Дата', 'Инфицированные', 'Выздоровевшие', 'Погибшие'))
-cat(paste0('https://t.me/COVID2019_official', ' (c) ', Sys.Date()))
 ```
+
+# Прогноз
+
+```{r forecast,comment=''}
+kable(df0_forecast, 
+      caption = 'Прогноз по линейной модели',
+      col.names = c('Дата', 'Инфицированные*', 'Выздоровевшие*', 'Погибшие*'))
+```
+
+# Ссылки
+
+```{r copyright,comment=''}
+cat('https://t.me/COVID2019_official')
+cat('https://github.com/timothy-makarov/COVID-19')
+cat(paste0('(c) ', Sys.Date()))
+```
+
