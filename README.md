@@ -1,20 +1,30 @@
 # COVID-19
 
-From Russia with COVID-19.
+*From Russia with COVID-19.*
+
+Wiki page with historical data https://github.com/timothy-makarov/COVID-19/wiki (screenshots).
 
 ---
 
-Statistics from goverment officials with log plots (daily updates):
+## Data
+
+CSV file with the official data since **March 1, 2020**:
 
 ```
-COVID-19.R
+COVID-19.csv
 ```
 
-R Markdown with PDF generation in Cairo:
+## PDF Reports
+
+R Markdown source file for PDF reports generation:
 
 ```
 COVID-19.Rmd
 ```
+
+Report examples could be found here https://github.com/timothy-makarov/COVID-19/issues/1.
+
+## PS
 
 Very nice tutorial on SIR model from Numberphile:
 
@@ -22,10 +32,7 @@ Very nice tutorial on SIR model from Numberphile:
 covid19-numberphile.ggb
 ```
 
-Install **GeoGebra Classic 5** from here https://www.geogebra.org/download.
-
-
-There is also a Wiki page with historical data https://github.com/timothy-makarov/COVID-19/wiki.
+You will need to install **GeoGebra Classic 5** from here https://www.geogebra.org/download.
 
 ---
 
