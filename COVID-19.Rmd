@@ -96,32 +96,34 @@ ggplot(df0) +
 # Соотношения
 
 ```{r charts_infected_per_recovered,fig.align='center',dev='cairo_pdf'}
-ggplot(df0) +
-  geom_point(aes(date, infected_per_recovered), size = 0.75) +
-  geom_line(aes(date, infected_per_recovered),
-            size = 0.25,
-            linetype = 'dashed') +
+ggplot(df0, aes(date, infected_per_recovered)) +
+  geom_point(size = 0.75) +
+  geom_line(size = 0.25, linetype = 'dashed') +
   labs(x = 'Дата', y = 'Число инфицированных на 1 выздоровевшего') +
   scale_x_date(breaks = pretty_breaks(10))
 ```
 
 ```{r charts_infected_per_deceased,fig.align='center',dev='cairo_pdf'}
-ggplot(df0) +
-  geom_point(aes(date, infected_per_deceased), size = 0.75) +
-  geom_line(aes(date, infected_per_deceased),
-            size = 0.25,
-            linetype = 'dashed') +
+ggplot(df0, aes(date, infected_per_deceased)) +
+  geom_point(size = 0.75) +
+  geom_line(size = 0.25, linetype = 'dashed') +
   labs(x = 'Дата', y = 'Число инфицированных на 1 погибшего') +
   scale_x_date(breaks = pretty_breaks(10))
 ```
 
 ```{r charts_recovered_per_deceased,fig.align='center',dev='cairo_pdf'}
-ggplot(df0) +
-  geom_point(aes(date, recovered_per_deceased), size = 0.75) +
-  geom_line(aes(date, recovered_per_deceased),
-            size = 0.25,
-            linetype = 'dashed') +
+ggplot(df0, aes(date, recovered_per_deceased)) +
+  geom_point(size = 0.75) +
+  geom_line(size = 0.25, linetype = 'dashed') +
   labs(x = 'Дата', y = 'Число выздоровевших на 1 погибшего') +
+  scale_x_date(breaks = pretty_breaks(10))
+```
+
+```{r charts_removed_per_infected,fig.align='center',dev='cairo_pdf'}
+ggplot(df0, aes(date, removed_per_infected)) +
+  geom_point(size = 0.75) +
+  geom_line(size = 0.25, linetype = 'dashed') +
+  labs(x = 'Дата', y = 'Число более не заразных на 1 инфицированного') +
   scale_x_date(breaks = pretty_breaks(10))
 ```
 

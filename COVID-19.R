@@ -45,6 +45,8 @@ df0$infected_per_recovered <- df0$infected / df0$recovered
 df0$infected_per_deceased <- df0$infected / df0$deceased
 df0$recovered_per_deceased <- df0$recovered / df0$deceased
 
+df0$removed_per_infected <- df0$removed / df0$infected
+
 # Presentation
 df0_data <- df0 %>%
   filter(!is.na(infected)) %>%
