@@ -43,9 +43,7 @@ df0$deceased_lm0 <- round(2 ^ df0$deceased_l2lm0)
 
 df0$infected_per_recovered <- df0$infected / df0$recovered
 df0$infected_per_deceased <- df0$infected / df0$deceased
-df0$recovered_per_deceased <- df0$recovered / df0$deceased
-
-df0$removed_per_infected <- df0$removed / df0$infected
+df0$infected_per_removed <- df0$infected / df0$removed
 
 # Presentation
 df0_data <- df0 %>%

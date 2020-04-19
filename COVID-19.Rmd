@@ -33,18 +33,10 @@ ggplot(df0) +
     size = 0.25,
     linetype = 'dashed'
   ) +
-  labs(x = 'Дата', y = 'Общее число инфицированных') +
-  scale_x_date(breaks = pretty_breaks(10))
-```
-
-```{r charts_infected_log2,fig.align='center',dev='cairo_pdf'}
-ggplot(df0) +
-  geom_point(aes(date, infected_log2), size = 0.75) +
-  geom_line(aes(date, infected_l2lm0),
-            size = 0.25,
-            linetype = 'dashed') +
-  labs(x = 'Дата', y = 'log2 общего числа инфицированных') +
-  scale_x_date(breaks = pretty_breaks(10))
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Общее число инфицированных') +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 # Выздоровевшие
@@ -55,8 +47,10 @@ ggplot(df0) +
   geom_line(aes(date, recovered_lm0),
             size = 0.25,
             linetype = 'dashed') +
-  labs(x = 'Дата', y = 'Общее число выздоровевших') +
-  scale_x_date(breaks = pretty_breaks(10))
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Общее число выздоровевших') +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 # Погибшие
@@ -67,8 +61,10 @@ ggplot(df0) +
   geom_line(aes(date, deceased_lm0),
             size = 0.25,
             linetype = 'dashed') +
-  labs(x = 'Дата', y = 'Общее число погибших') +
-  scale_x_date(breaks = pretty_breaks(10))
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Общее число погибших') +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 # Более не заразные
@@ -79,52 +75,42 @@ ggplot(df0) +
   geom_line(aes(date, removed_lm0),
             size = 0.25,
             linetype = 'dashed') +
-  labs(x = 'Дата', y = 'Более не заразные') +
-  scale_x_date(breaks = pretty_breaks(10))
-```
-
-```{r charts_removed_log2,fig.align='center',dev='cairo_pdf'}
-ggplot(df0) +
-  geom_point(aes(date, removed_log2), size = 0.75) +
-  geom_line(aes(date, removed_l2lm0),
-            size = 0.25,
-            linetype = 'dashed') +
-  labs(x = 'Дата', y = 'log2 более не заразных') +
-  scale_x_date(breaks = pretty_breaks(10))
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Более не заразные') +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 # Соотношения
+
+```{r charts_infected_per_removed,fig.align='center',dev='cairo_pdf'}
+ggplot(df0, aes(date, infected_per_removed)) +
+  geom_point(size = 0.75) +
+  geom_line(size = 0.25, linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Число инфицированных на 1 более не заразного') +
+  theme(plot.title = element_text(hjust = 0.5))
+```
 
 ```{r charts_infected_per_recovered,fig.align='center',dev='cairo_pdf'}
 ggplot(df0, aes(date, infected_per_recovered)) +
   geom_point(size = 0.75) +
   geom_line(size = 0.25, linetype = 'dashed') +
-  labs(x = 'Дата', y = 'Число инфицированных на 1 выздоровевшего') +
-  scale_x_date(breaks = pretty_breaks(10))
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Число инфицированных на 1 выздоровевшего') +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ```{r charts_infected_per_deceased,fig.align='center',dev='cairo_pdf'}
 ggplot(df0, aes(date, infected_per_deceased)) +
   geom_point(size = 0.75) +
   geom_line(size = 0.25, linetype = 'dashed') +
-  labs(x = 'Дата', y = 'Число инфицированных на 1 погибшего') +
-  scale_x_date(breaks = pretty_breaks(10))
-```
-
-```{r charts_recovered_per_deceased,fig.align='center',dev='cairo_pdf'}
-ggplot(df0, aes(date, recovered_per_deceased)) +
-  geom_point(size = 0.75) +
-  geom_line(size = 0.25, linetype = 'dashed') +
-  labs(x = 'Дата', y = 'Число выздоровевших на 1 погибшего') +
-  scale_x_date(breaks = pretty_breaks(10))
-```
-
-```{r charts_removed_per_infected,fig.align='center',dev='cairo_pdf'}
-ggplot(df0, aes(date, removed_per_infected)) +
-  geom_point(size = 0.75) +
-  geom_line(size = 0.25, linetype = 'dashed') +
-  labs(x = 'Дата', y = 'Число более не заразных на 1 инфицированного') +
-  scale_x_date(breaks = pretty_breaks(10))
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Число инфицированных на 1 погибшего') +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 # Данные
