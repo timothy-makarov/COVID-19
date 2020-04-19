@@ -24,15 +24,21 @@ COVID-19.Rmd
 
 Report examples could be found here https://github.com/timothy-makarov/COVID-19/issues/1.
 
-## PS
+## SIR
 
-Very nice tutorial on SIR model from Numberphile:
+Script for running epidemic model (almost fitted):
+
+```
+SIR.R
+```
+
+Interesting tutorial on SIR model from Numberphile:
 
 ```
 covid19-numberphile.ggb
 ```
 
-You will need to install **GeoGebra Classic 5** from here https://www.geogebra.org/download.
+Install **GeoGebra Classic 5** from here https://www.geogebra.org/download.
 
 ---
 
