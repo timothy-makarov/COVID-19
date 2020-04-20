@@ -24,8 +24,20 @@ source('COVID-19.R')
 
 # Инфицированные
 
+```{r charts_infected_growth,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_col(aes(date, infected_growth), size = 0.75) +
+  geom_point(aes(date, infected_growth), color = 'brown', size = 0.75) +
+  geom_line(aes(date, infected_growth_lm0), color = 'brown', size = 0.25, linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Ежедневный прирост инфицированных') +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
 ```{r charts_infected,fig.align='center',dev='cairo_pdf'}
 ggplot(df0) +
+  geom_col(aes(date, infected), size = 0.75) +
   geom_point(aes(date, infected), color = 'brown', size = 0.75) +
   geom_line(
     aes(date, infected_lm0),
@@ -41,12 +53,22 @@ ggplot(df0) +
 
 # Выздоровевшие
 
+```{r charts_recovered_growth,fig.align='center',dev='cairo_pdf'}
+ggplot(df0) +
+  geom_col(aes(date, recovered_growth), size = 0.75) +
+  geom_point(aes(date, recovered_growth), color = 'brown', size = 0.75) +
+  geom_line(aes(date, recovered_growth_lm0), color = 'brown', size = 0.25, linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Ежедневный прирост выздоровевших') +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
 ```{r charts_recovered,fig.align='center',dev='cairo_pdf'}
 ggplot(df0) +
-  geom_point(aes(date, recovered), size = 0.75) +
-  geom_line(aes(date, recovered_lm0),
-            size = 0.25,
-            linetype = 'dashed') +
+  geom_col(aes(date, recovered), size = 0.75) +
+  geom_point(aes(date, recovered), color = 'brown', size = 0.75) +
+  geom_line(aes(date, recovered_lm0), color = 'brown', size = 0.25, linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Общее число выздоровевших') +
@@ -57,10 +79,9 @@ ggplot(df0) +
 
 ```{r charts_deceased,fig.align='center',dev='cairo_pdf'}
 ggplot(df0) +
-  geom_point(aes(date, deceased), size = 0.75) +
-  geom_line(aes(date, deceased_lm0),
-            size = 0.25,
-            linetype = 'dashed') +
+  geom_col(aes(date, deceased), size = 0.75) +
+  geom_point(aes(date, deceased), color = 'brown', size = 0.75) +
+  geom_line(aes(date, deceased_lm0), color = 'brown', size = 0.25, linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Общее число погибших') +
@@ -71,10 +92,9 @@ ggplot(df0) +
 
 ```{r charts_removed,fig.align='center',dev='cairo_pdf'}
 ggplot(df0) +
-  geom_point(aes(date, removed), size = 0.75) +
-  geom_line(aes(date, removed_lm0),
-            size = 0.25,
-            linetype = 'dashed') +
+  geom_col(aes(date, removed), size = 0.75) +
+  geom_point(aes(date, removed), color = 'brown', size = 0.75) +
+  geom_line(aes(date, removed_lm0), color = 'brown', size = 0.25, linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Более не заразные') +
