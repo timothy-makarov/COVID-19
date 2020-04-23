@@ -79,6 +79,15 @@ ggplot(df0) +
 
 ```{r charts_deceased,fig.align='center',dev='cairo_pdf'}
 ggplot(df0) +
+  geom_col(aes(date, deceased_growth), size = 0.75) +
+  geom_point(aes(date, deceased_growth), color = 'brown', size = 0.75) +
+  geom_line(aes(date, deceased_growth_lm0), color = 'brown', size = 0.25, linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Ежедневный прирост погибших') +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(df0) +
   geom_col(aes(date, deceased), size = 0.75) +
   geom_point(aes(date, deceased), color = 'brown', size = 0.75) +
   geom_line(aes(date, deceased_lm0), color = 'brown', size = 0.25, linetype = 'dashed') +
@@ -88,65 +97,45 @@ ggplot(df0) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-# Более не заразные
-
-```{r charts_removed,fig.align='center',dev='cairo_pdf'}
-ggplot(df0) +
-  geom_col(aes(date, removed), size = 0.75) +
-  geom_point(aes(date, removed), color = 'brown', size = 0.75) +
-  geom_line(aes(date, removed_lm0), color = 'brown', size = 0.25, linetype = 'dashed') +
-  scale_x_date(breaks = pretty_breaks(10)) +
-  labs(x = '', y = '') +
-  ggtitle('Более не заразные') +
-  theme(plot.title = element_text(hjust = 0.5))
-```
-
 # Соотношения
 
-```{r charts_infected_per_removed,fig.align='center',dev='cairo_pdf'}
-ggplot(df0, aes(date, infected_per_removed)) +
+```{r charts_cfr,fig.align='center',dev='cairo_pdf'}
+ggplot(df0, aes(date, cfr)) +
   geom_point(size = 0.75) +
   geom_line(size = 0.25, linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
-  labs(x = '', y = '') +
-  ggtitle('Число инфицированных на 1 более не заразного') +
-  theme(plot.title = element_text(hjust = 0.5))
-```
-
-```{r charts_infected_per_recovered,fig.align='center',dev='cairo_pdf'}
-ggplot(df0, aes(date, infected_per_recovered)) +
-  geom_point(size = 0.75) +
-  geom_line(size = 0.25, linetype = 'dashed') +
-  scale_x_date(breaks = pretty_breaks(10)) +
-  labs(x = '', y = '') +
-  ggtitle('Число инфицированных на 1 выздоровевшего') +
-  theme(plot.title = element_text(hjust = 0.5))
-```
-
-```{r charts_infected_per_deceased,fig.align='center',dev='cairo_pdf'}
-ggplot(df0, aes(date, infected_per_deceased)) +
-  geom_point(size = 0.75) +
-  geom_line(size = 0.25, linetype = 'dashed') +
-  scale_x_date(breaks = pretty_breaks(10)) +
-  labs(x = '', y = '') +
-  ggtitle('Число инфицированных на 1 погибшего') +
+  labs(x = '', y = '%') +
+  ggtitle('CFR (T = 14 дней)') +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
 # Данные
 
-```{r datatable,comment=''}
+```{r table_data,comment=''}
 kable(df0_data, 
       caption = 'Официальные данные - Оперштаб Москвы',
-      col.names = c('Дата', 'Инфицированные', 'Выздоровевшие', 'Погибшие'))
+      col.names = c('Дата',
+                    'Инфицир.',
+                    'Изм. инфицир.',
+                    'Выздоров.',
+                    'Изм. выздоров.',
+                    'Погибш.',
+                    'Изм. погибш.')
+      )
 ```
 
-# Прогноз
+# Модель
 
-```{r forecast,comment=''}
-kable(df0_forecast, 
-      caption = 'Прогноз по линейной модели',
-      col.names = c('Дата', 'Инфицированные*', 'Выздоровевшие*', 'Погибшие*'))
+```{r table_model,comment=''}
+kable(df0_model, 
+      caption = 'Прогноз по линейной модели (log2)',
+      col.names = c('Дата',
+                    'Инфицир.',
+                    'Инфицир. ош., %',
+                    'Выздоров.',
+                    'Выздоров. ош., %',
+                    'Погибш.',
+                    'Погибш. ош., %'))
 ```
 
 # Ссылки
