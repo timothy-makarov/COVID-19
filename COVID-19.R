@@ -46,9 +46,6 @@ proc_period <- function(df_in, t0, t1) {
   deceased_growth_lm0 <- lm(formula = deceased_growth ~ date, df_out)
   df_out$deceased_growth_lm0 <- round(predict(deceased_growth_lm0, df_out))
 
-  # https://www.worldometers.info/coronavirus/coronavirus-death-rate/
-  df_out$cfr <- round(df_out$deceased / lag(df_out$infected, 14) * 100, 2)
-
   # Presentation
   table_data <- df_out %>%
     filter(!is.na(infected)) %>%
@@ -78,6 +75,14 @@ proc_period <- function(df_in, t0, t1) {
   ))
 }
 
+
+find_y_intersect <- function(lmod) {
+  k <- lmod$coefficients[[2]]
+  b <- lmod$coefficients[[1]]
+  return(as.Date('1970-01-01') - b / k)
+}
+
+
 # Environment
 setwd("~/Git/COVID-19")
 
@@ -101,3 +106,10 @@ df0$deceased_rate <- round((df0$deceased / lag(df0$deceased) - 1) * 100, 2)
 
 # Removed
 df0$removed <- df0$recovered + df0$deceased
+
+# Formula:
+# https://www.worldometers.info/coronavirus/coronavirus-death-rate/
+#
+# Parameters:
+# https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf (p. 14)
+df0$cfr <- round(df0$deceased / lag(df0$infected, 14) * 100, 2)
