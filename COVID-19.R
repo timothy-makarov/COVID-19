@@ -21,8 +21,8 @@ proc_period <- function(df_in, t0, t1) {
   df_out$infected_lm0 <- round(2 ^ df_out$infected_l2lm0)
   df_out$infected_lm0_err <- round((df_out$infected_lm0 / df_out$infected - 1) * 100, 2)
 
-  inf_growth_lm0 <- lm(formula = infected_growth ~ date, df_out)
-  df_out$infected_growth_lm0 <- round(predict(inf_growth_lm0, df_out))
+  infected_growth_lm0 <- lm(formula = infected_growth ~ date, df_out)
+  df_out$infected_growth_lm0 <- round(predict(infected_growth_lm0, df_out))
 
   infected_rate_lm0 <- lm(formula = infected_rate ~ date, df_out)
   df_out$infected_rate_lm0 <- predict(infected_rate_lm0, df_out)
@@ -43,8 +43,14 @@ proc_period <- function(df_in, t0, t1) {
   deceased_rate_lm0 <- lm(formula = deceased_rate ~ date, df_out)
   df_out$deceased_rate_lm0 <- predict(deceased_rate_lm0, df_out)
 
+  recovered_rate_lm0 <- lm(formula = recovered_rate ~ date, df_out)
+  df_out$recovered_rate_lm0 <- predict(recovered_rate_lm0, df_out)
+  
   deceased_growth_lm0 <- lm(formula = deceased_growth ~ date, df_out)
   df_out$deceased_growth_lm0 <- round(predict(deceased_growth_lm0, df_out))
+
+  cfr_lm0 <- lm(formula = cfr ~ date, df_out)
+  df_out$cfr_lm0 <- round(predict(cfr_lm0, df_out), 2)
 
   # Presentation
   table_data <- df_out %>%
@@ -68,10 +74,22 @@ proc_period <- function(df_in, t0, t1) {
   
   return(list(
     df = df_out,
+
     data = table_data,
     model = table_model,
+
     infected_rate_lm0 = infected_rate_lm0,
-    deceased_rate_lm0 = deceased_rate_lm0
+    recovered_rate_lm0 = recovered_rate_lm0,
+    deceased_rate_lm0 = deceased_rate_lm0,
+
+    recovered_growth_lm0 = recovered_growth_lm0,
+    infected_growth_lm0 = infected_growth_lm0,
+    deceased_growth_lm0 = deceased_growth_lm0,
+
+    recovered_l2lm0 = recovered_l2lm0,
+    deceased_l2lm0 = deceased_l2lm0,
+    
+    cfr_lm0 = cfr_lm0
   ))
 }
 
@@ -79,7 +97,7 @@ proc_period <- function(df_in, t0, t1) {
 find_y_intersect <- function(lmod) {
   k <- lmod$coefficients[[2]]
   b <- lmod$coefficients[[1]]
-  return(as.Date('1970-01-01') - b / k)
+  return(as.Date('1970-01-01') + (-b / k))
 }
 
 
@@ -98,6 +116,7 @@ df0$infected_rate <- round((df0$infected / lag(df0$infected) - 1) * 100, 2)
 # Recovered
 df0$recovered_growth <- c(0, diff(df0$recovered))
 df0$recovered_l2 <- log2(df0$recovered)
+df0$recovered_rate <- round((df0$recovered / lag(df0$recovered) - 1) * 100, 2)
 
 # Deceased
 df0$deceased_growth <- c(0, diff(df0$deceased))

@@ -35,10 +35,13 @@ ggplot(p1$df, aes(date, infected_growth)) +
   geom_point() +
   geom_line(aes(date, infected_growth_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Ежедневный прирост инфицированных') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p1$infected_growth_lm0)))
 ```
 
 ```{r fig.align='center',dev='cairo_pdf'}
@@ -46,6 +49,7 @@ ggplot(p1$df, aes(date, infected)) +
   geom_point() +
   geom_line(aes(date, infected_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Общее число инфицированных') +
   theme_light() +
@@ -57,12 +61,13 @@ ggplot(p1$df, aes(date, infected_rate)) +
   geom_point() +
   geom_line(aes(date, infected_rate_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '%') +
   ggtitle('Относительный прирост инфицированных') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
 
-cat(paste0('Нулевой прирост будет достигнут: ', find_y_intersect(p1$infected_rate_lm0)))
+cat(paste0('Нулевой прирост: ', find_y_intersect(p1$infected_rate_lm0)))
 ```
 
 ## Выздоровевшие
@@ -72,10 +77,13 @@ ggplot(p1$df, aes(date, recovered_growth)) +
   geom_point() +
   geom_line(aes(date, recovered_growth_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Ежедневный прирост выздоровевших') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p1$recovered_growth_lm0)))
 ```
 
 ```{r fig.align='center',dev='cairo_pdf'}
@@ -83,10 +91,25 @@ ggplot(p1$df, aes(date, recovered)) +
   geom_point() +
   geom_line(aes(date, recovered_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Общее число выздоровевших') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p1$df, aes(date, recovered_rate)) +
+  geom_point() +
+  geom_line(aes(date, recovered_rate_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '%') +
+  ggtitle('Относительный прирост выздоровевших') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p1$recovered_rate_lm0)))
 ```
 
 ## Погибшие
@@ -96,10 +119,13 @@ ggplot(p1$df, aes(date, deceased_growth)) +
   geom_point() +
   geom_line(aes(date, deceased_growth_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Ежедневный прирост погибших') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p1$deceased_growth_lm0)))
 ```
 
 ```{r fig.align='center',dev='cairo_pdf'}
@@ -107,6 +133,7 @@ ggplot(p1$df, aes(date, deceased)) +
   geom_point() +
   geom_line(aes(date, deceased_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Общее число погибших') +
   theme_light() +
@@ -118,12 +145,13 @@ ggplot(p1$df, aes(date, deceased_rate)) +
   geom_point() +
   geom_line(aes(date, deceased_rate_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '%') +
   ggtitle('Относительный прирост погибших') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
 
-cat(paste0('Нулевой прирост будет достигнут: ', find_y_intersect(p1$deceased_rate_lm0)))
+cat(paste0('Нулевой прирост: ', find_y_intersect(p1$deceased_rate_lm0)))
 ```
 
 ## Соотношения
@@ -131,12 +159,15 @@ cat(paste0('Нулевой прирост будет достигнут: ', find
 ```{r fig.align='center',dev='cairo_pdf'}
 ggplot(p1$df, aes(date, cfr)) +
   geom_point() +
-  geom_line(linetype = 'dashed') +
+  geom_line(aes(date, cfr_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '%') +
   ggtitle('CFR (T = 14 дней)') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p1$cfr_lm0)))
 ```
 
 ## Данные
@@ -177,10 +208,13 @@ ggplot(p2$df, aes(date, infected_growth)) +
   geom_point() +
   geom_line(aes(date, infected_growth_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Ежедневный прирост инфицированных') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p2$infected_growth_lm0)))
 ```
 
 ```{r fig.align='center',dev='cairo_pdf'}
@@ -188,6 +222,7 @@ ggplot(p2$df, aes(date, infected)) +
   geom_point() +
   geom_line(aes(date, infected_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Общее число инфицированных') +
   theme_light() +
@@ -199,12 +234,13 @@ ggplot(p2$df, aes(date, infected_rate)) +
   geom_point() +
   geom_line(aes(date, infected_rate_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '%') +
   ggtitle('Относительный прирост инфицированных') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
 
-cat(paste0('Нулевой прирост будет достигнут: ', find_y_intersect(p2$infected_rate_lm0)))
+cat(paste0('Нулевой прирост: ', find_y_intersect(p2$infected_rate_lm0)))
 ```
 
 ## Выздоровевшие
@@ -214,10 +250,13 @@ ggplot(p2$df, aes(date, recovered_growth)) +
   geom_point() +
   geom_line(aes(date, recovered_growth_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Ежедневный прирост выздоровевших') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p2$recovered_growth_lm0)))
 ```
 
 ```{r fig.align='center',dev='cairo_pdf'}
@@ -225,10 +264,25 @@ ggplot(p2$df, aes(date, recovered)) +
   geom_point() +
   geom_line(aes(date, recovered_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Общее число выздоровевших') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p2$df, aes(date, recovered_rate)) +
+  geom_point() +
+  geom_line(aes(date, recovered_rate_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '%') +
+  ggtitle('Относительный прирост выздоровевших') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p2$recovered_rate_lm0)))
 ```
 
 ## Погибшие
@@ -238,10 +292,13 @@ ggplot(p2$df, aes(date, deceased_growth)) +
   geom_point() +
   geom_line(aes(date, deceased_growth_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Ежедневный прирост погибших') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p2$deceased_growth_lm0)))
 ```
 
 ```{r fig.align='center',dev='cairo_pdf'}
@@ -249,6 +306,7 @@ ggplot(p2$df, aes(date, deceased)) +
   geom_point() +
   geom_line(aes(date, deceased_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '') +
   ggtitle('Общее число погибших') +
   theme_light() +
@@ -260,12 +318,13 @@ ggplot(p2$df, aes(date, deceased_rate)) +
   geom_point() +
   geom_line(aes(date, deceased_rate_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '%') +
   ggtitle('Относительный прирост погибших') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
 
-cat(paste0('Нулевой прирост будет достигнут: ', find_y_intersect(p2$deceased_rate_lm0)))
+cat(paste0('Нулевой прирост: ', find_y_intersect(p2$deceased_rate_lm0)))
 ```
 
 ## Соотношения
@@ -273,12 +332,15 @@ cat(paste0('Нулевой прирост будет достигнут: ', find
 ```{r fig.align='center',dev='cairo_pdf'}
 ggplot(p2$df, aes(date, cfr)) +
   geom_point() +
-  geom_line(linetype = 'dashed') +
+  geom_line(aes(date, cfr_lm0), color = 'brown', linetype = 'dashed') +
   scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '%') +
   ggtitle('CFR (T = 14 дней)') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p2$cfr_lm0)))
 ```
 
 ## Данные
