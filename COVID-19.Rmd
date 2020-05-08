@@ -170,6 +170,27 @@ ggplot(p1$df, aes(date, cfr)) +
 cat(paste0('Нулевой прирост: ', find_y_intersect(p1$cfr_lm0)))
 ```
 
+## Модель
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p1$model) +
+  geom_line(aes(date, infected_lm0_err, color = 'brown')) +
+  geom_line(aes(date, recovered_lm0_err, color = 'green')) +
+  geom_line(aes(date, deceased_lm0_err, color = 'red')) +
+  scale_x_date(breaks = pretty_breaks(8)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  scale_color_identity(
+    name = 'Ошибка, %',
+    breaks = c('brown', 'green', 'red'),
+    labels = c('Инфицир.', 'Выздоров.', 'Погибш.'),
+    guide = 'legend'
+  ) +
+  labs(x = '', y = '%') +
+  ggtitle('Ошибки модели') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
 ## Данные
 
 ```{r}
@@ -341,6 +362,27 @@ ggplot(p2$df, aes(date, cfr)) +
   theme(plot.title = element_text(hjust = 0.5))
 
 cat(paste0('Нулевой прирост: ', find_y_intersect(p2$cfr_lm0)))
+```
+
+## Модель
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p2$model) +
+  geom_line(aes(date, infected_lm0_err, color = 'brown')) +
+  geom_line(aes(date, recovered_lm0_err, color = 'green')) +
+  geom_line(aes(date, deceased_lm0_err, color = 'red')) +
+  scale_x_date(breaks = pretty_breaks(8)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  scale_color_identity(
+    name = 'Ошибка, %',
+    breaks = c('brown', 'green', 'red'),
+    labels = c('Инфицир.', 'Выздоров.', 'Погибш.'),
+    guide = 'legend'
+  ) +
+  labs(x = '', y = '%') +
+  ggtitle('Ошибки модели') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ## Данные
