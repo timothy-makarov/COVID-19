@@ -163,7 +163,7 @@ ggplot(p1$df, aes(date, cfr)) +
   scale_x_date(breaks = pretty_breaks(10)) +
   scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '%') +
-  ggtitle('CFR (T = 14 дней)') +
+  ggtitle('CFR (T = 10 дней)') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
 
@@ -357,7 +357,7 @@ ggplot(p2$df, aes(date, cfr)) +
   scale_x_date(breaks = pretty_breaks(10)) +
   scale_y_continuous(breaks = pretty_breaks(10)) +
   labs(x = '', y = '%') +
-  ggtitle('CFR (T = 14 дней)') +
+  ggtitle('CFR (T = 10 дней)') +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
 

@@ -101,10 +101,15 @@ find_y_intersect <- function(lmod) {
 }
 
 
+#
 # Environment
+#
 setwd("~/Git/COVID-19")
 
+
+#
 # Import data
+#
 df0 <- read.csv('COVID-19.csv')
 df0$date <- as.Date(df0$date)
 
@@ -131,4 +136,38 @@ df0$removed <- df0$recovered + df0$deceased
 #
 # Parameters:
 # https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf (p. 14)
-df0$cfr <- round(df0$deceased / lag(df0$infected, 14) * 100, 2)
+df0$cfr <- round(df0$deceased / lag(df0$infected, 10) * 100, 2)
+
+
+#
+# Processing
+#
+k <- 1
+dfp <- data.frame(
+  date = df0$date,
+  infected = runmed(df0$infected, k),
+  recovered = runmed(df0$recovered, k),
+  deceased = runmed(df0$deceased, k),
+  removed = runmed(df0$removed, k)
+)
+
+dfp$recovered_norm <- round(dfp$recovered / lag(dfp$infected, 10) * 100, 2)
+dfp$deceased_norm <- round(dfp$deceased / lag(dfp$infected, 10) * 100, 2)
+dfp$removed_norm <- round(dfp$removed / lag(dfp$infected, 10) * 100, 2)
+
+ggplot(dfp) +
+  geom_line(aes(date, recovered_norm, color = 'green')) +
+  geom_line(aes(date, deceased_norm, color = 'red')) +
+  geom_line(aes(date, removed_norm, color = 'brown')) +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  scale_color_identity(
+    name = '',
+    breaks = c('blue', 'green', 'red', 'brown'),
+    labels = c('Инфицир.', 'Выздоров.', 'Погибш.', 'Не заразн.'),
+    guide = 'legend'
+  ) +
+  labs(x = '', y = '%') +
+  ggtitle('Нормированные на инфицированных с лагом 10 дней') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
