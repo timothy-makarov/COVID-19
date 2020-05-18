@@ -23,10 +23,11 @@ opts_chunk$set(echo = FALSE, cache = FALSE, warning = FALSE, message = FALSE, co
 source('COVID-19.R')
 
 p1 <- proc_period(df0, '2020-04-02', '2020-04-19')
-p2 <- proc_period(df0, '2020-04-20', '2020-05-31')
+p2 <- proc_period(df0, '2020-04-20', '2020-05-10')
+p3 <- proc_period(df0, '2020-05-11', '2020-05-31')
 ```
 
-# Период с 2020-04-02 по 2020-04-19
+# Период с `r min(p1$df$date)` по `r max(p1$df$date)`
 
 ## Инфицированные
 
@@ -220,7 +221,7 @@ kable(p1$model,
                     'Погибш. ош., %'))
 ```
 
-# Период с 2020-04-20 по *
+# Период с `r min(p2$df$date)` по `r max(p2$df$date)`
 
 ## Инфицированные
 
@@ -404,6 +405,200 @@ kable(p2$data,
 
 ```{r}
 kable(p2$model, 
+      caption = 'Прогноз по линейной модели (log2)',
+      col.names = c('Дата',
+                    'Инфицир.',
+                    'Инфицир. ош., %',
+                    'Выздоров.',
+                    'Выздоров. ош., %',
+                    'Погибш.',
+                    'Погибш. ош., %'))
+```
+
+# Период с `r min(p3$df$date)` по `r max(p3$df$date)`
+
+## Инфицированные
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, infected_growth)) +
+  geom_point() +
+  geom_line(aes(date, infected_growth_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Ежедневный прирост инфицированных') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p3$infected_growth_lm0)))
+```
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, infected)) +
+  geom_point() +
+  geom_line(aes(date, infected_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Общее число инфицированных') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, infected_rate)) +
+  geom_point() +
+  geom_line(aes(date, infected_rate_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '%') +
+  ggtitle('Относительный прирост инфицированных') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p3$infected_rate_lm0)))
+```
+
+## Выздоровевшие
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, recovered_growth)) +
+  geom_point() +
+  geom_line(aes(date, recovered_growth_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Ежедневный прирост выздоровевших') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p3$recovered_growth_lm0)))
+```
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, recovered)) +
+  geom_point() +
+  geom_line(aes(date, recovered_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Общее число выздоровевших') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, recovered_rate)) +
+  geom_point() +
+  geom_line(aes(date, recovered_rate_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '%') +
+  ggtitle('Относительный прирост выздоровевших') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p3$recovered_rate_lm0)))
+```
+
+## Погибшие
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, deceased_growth)) +
+  geom_point() +
+  geom_line(aes(date, deceased_growth_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Ежедневный прирост погибших') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p3$deceased_growth_lm0)))
+```
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, deceased)) +
+  geom_point() +
+  geom_line(aes(date, deceased_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '') +
+  ggtitle('Общее число погибших') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, deceased_rate)) +
+  geom_point() +
+  geom_line(aes(date, deceased_rate_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '%') +
+  ggtitle('Относительный прирост погибших') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p3$deceased_rate_lm0)))
+```
+
+## Соотношения
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$df, aes(date, cfr)) +
+  geom_point() +
+  geom_line(aes(date, cfr_lm0), color = 'brown', linetype = 'dashed') +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  labs(x = '', y = '%') +
+  ggtitle('CFR (T = 10 дней)') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+cat(paste0('Нулевой прирост: ', find_y_intersect(p3$cfr_lm0)))
+```
+
+## Модель
+
+```{r fig.align='center',dev='cairo_pdf'}
+ggplot(p3$model) +
+  geom_line(aes(date, infected_lm0_err, color = 'brown')) +
+  geom_line(aes(date, recovered_lm0_err, color = 'green')) +
+  geom_line(aes(date, deceased_lm0_err, color = 'red')) +
+  scale_x_date(breaks = pretty_breaks(8)) +
+  scale_y_continuous(breaks = pretty_breaks(10)) +
+  scale_color_identity(
+    name = 'Ошибка, %',
+    breaks = c('brown', 'green', 'red'),
+    labels = c('Инфицир.', 'Выздоров.', 'Погибш.'),
+    guide = 'legend'
+  ) +
+  labs(x = '', y = '%') +
+  ggtitle('Ошибки модели') +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+## Данные
+
+```{r}
+kable(p3$data, 
+      caption = 'Официальные данные - Оперштаб Москвы',
+      col.names = c('Дата',
+                    'Инфицир.',
+                    'Изм. инфицир.',
+                    'Выздоров.',
+                    'Изм. выздоров.',
+                    'Погибш.',
+                    'Изм. погибш.')
+      )
+```
+
+## Модель
+
+```{r}
+kable(p3$model, 
       caption = 'Прогноз по линейной модели (log2)',
       col.names = c('Дата',
                     'Инфицир.',
