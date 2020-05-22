@@ -155,22 +155,6 @@ ggplot(p1$df, aes(date, deceased_rate)) +
 cat(paste0('Нулевой прирост: ', find_y_intersect(p1$deceased_rate_lm0)))
 ```
 
-## Соотношения
-
-```{r fig.align='center',dev='cairo_pdf'}
-ggplot(p1$df, aes(date, cfr)) +
-  geom_point() +
-  geom_line(aes(date, cfr_lm0), color = 'brown', linetype = 'dashed') +
-  scale_x_date(breaks = pretty_breaks(10)) +
-  scale_y_continuous(breaks = pretty_breaks(10)) +
-  labs(x = '', y = '%') +
-  ggtitle('CFR (T = 10 дней)') +
-  theme_light() +
-  theme(plot.title = element_text(hjust = 0.5))
-
-cat(paste0('Нулевой прирост: ', find_y_intersect(p1$cfr_lm0)))
-```
-
 ## Модель
 
 ```{r fig.align='center',dev='cairo_pdf'}
@@ -349,22 +333,6 @@ ggplot(p2$df, aes(date, deceased_rate)) +
 cat(paste0('Нулевой прирост: ', find_y_intersect(p2$deceased_rate_lm0)))
 ```
 
-## Соотношения
-
-```{r fig.align='center',dev='cairo_pdf'}
-ggplot(p2$df, aes(date, cfr)) +
-  geom_point() +
-  geom_line(aes(date, cfr_lm0), color = 'brown', linetype = 'dashed') +
-  scale_x_date(breaks = pretty_breaks(10)) +
-  scale_y_continuous(breaks = pretty_breaks(10)) +
-  labs(x = '', y = '%') +
-  ggtitle('CFR (T = 10 дней)') +
-  theme_light() +
-  theme(plot.title = element_text(hjust = 0.5))
-
-cat(paste0('Нулевой прирост: ', find_y_intersect(p2$cfr_lm0)))
-```
-
 ## Модель
 
 ```{r fig.align='center',dev='cairo_pdf'}
@@ -541,22 +509,6 @@ ggplot(p3$df, aes(date, deceased_rate)) +
   theme(plot.title = element_text(hjust = 0.5))
 
 cat(paste0('Нулевой прирост: ', find_y_intersect(p3$deceased_rate_lm0)))
-```
-
-## Соотношения
-
-```{r fig.align='center',dev='cairo_pdf'}
-ggplot(p3$df, aes(date, cfr)) +
-  geom_point() +
-  geom_line(aes(date, cfr_lm0), color = 'brown', linetype = 'dashed') +
-  scale_x_date(breaks = pretty_breaks(10)) +
-  scale_y_continuous(breaks = pretty_breaks(10)) +
-  labs(x = '', y = '%') +
-  ggtitle('CFR (T = 10 дней)') +
-  theme_light() +
-  theme(plot.title = element_text(hjust = 0.5))
-
-cat(paste0('Нулевой прирост: ', find_y_intersect(p3$cfr_lm0)))
 ```
 
 ## Модель

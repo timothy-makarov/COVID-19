@@ -5,6 +5,7 @@
 
 library(dplyr)
 library(ggplot2)
+library(scales)
 
 rm(list = ls())
 
@@ -49,9 +50,6 @@ proc_period <- function(df_in, t0, t1) {
   deceased_growth_lm0 <- lm(formula = deceased_growth ~ date, df_out)
   df_out$deceased_growth_lm0 <- round(predict(deceased_growth_lm0, df_out))
 
-  cfr_lm0 <- lm(formula = cfr ~ date, df_out)
-  df_out$cfr_lm0 <- round(predict(cfr_lm0, df_out), 2)
-
   # Presentation
   table_data <- df_out %>%
     filter(!is.na(infected)) %>%
@@ -87,9 +85,7 @@ proc_period <- function(df_in, t0, t1) {
     deceased_growth_lm0 = deceased_growth_lm0,
 
     recovered_l2lm0 = recovered_l2lm0,
-    deceased_l2lm0 = deceased_l2lm0,
-    
-    cfr_lm0 = cfr_lm0
+    deceased_l2lm0 = deceased_l2lm0
   ))
 }
 
@@ -131,43 +127,28 @@ df0$deceased_rate <- round((df0$deceased / lag(df0$deceased) - 1) * 100, 2)
 # Removed
 df0$removed <- df0$recovered + df0$deceased
 
-# Formula:
-# https://www.worldometers.info/coronavirus/coronavirus-death-rate/
-#
-# Parameters:
-# https://www.who.int/docs/default-source/coronaviruse/who-china-joint-mission-on-covid-19-final-report.pdf (p. 14)
-df0$cfr <- round(df0$deceased / lag(df0$infected, 10) * 100, 2)
-
 
 #
-# Processing
+# EDA
 #
-k <- 1
-dfp <- data.frame(
-  date = df0$date,
-  infected = runmed(df0$infected, k),
-  recovered = runmed(df0$recovered, k),
-  deceased = runmed(df0$deceased, k),
-  removed = runmed(df0$removed, k)
-)
+lag_inf <- 1
+df0$infected_lag <- lag(df0$infected, lag_inf)
+deceased_infected_lag_lm0 <- lm(formula = deceased ~ infected_lag, df0)
+df0$deceased_infected_lag_lm0 <- round(predict(deceased_infected_lag_lm0, df0))
+deceased_infected_lag_lm0_s <- summary(deceased_infected_lag_lm0)
+df0$deceased_infected_lag_lm0_err <- round((df0$deceased_infected_lag_lm0 / df0$deceased - 1) * 100, 2)
 
-dfp$recovered_norm <- round(dfp$recovered / lag(dfp$infected, 10) * 100, 2)
-dfp$deceased_norm <- round(dfp$deceased / lag(dfp$infected, 10) * 100, 2)
-dfp$removed_norm <- round(dfp$removed / lag(dfp$infected, 10) * 100, 2)
-
-ggplot(dfp) +
-  geom_line(aes(date, recovered_norm, color = 'green')) +
-  geom_line(aes(date, deceased_norm, color = 'red')) +
-  geom_line(aes(date, removed_norm, color = 'brown')) +
-  scale_x_date(breaks = pretty_breaks(10)) +
-  scale_y_continuous(breaks = pretty_breaks(10)) +
-  scale_color_identity(
-    name = '',
-    breaks = c('blue', 'green', 'red', 'brown'),
-    labels = c('Инфицир.', 'Выздоров.', 'Погибш.', 'Не заразн.'),
-    guide = 'legend'
-  ) +
-  labs(x = '', y = '%') +
-  ggtitle('Нормированные на инфицированных с лагом 10 дней') +
-  theme_light() +
-  theme(plot.title = element_text(hjust = 0.5))
+ggplot(df0) +
+  geom_point(aes(infected_lag, deceased)) +
+  geom_line(aes(infected_lag, deceased_infected_lag_lm0), color = 'red') +
+  annotate(
+    'text',
+    x = 5e+4,
+    y = 3e+3,
+    label = paste0(
+      'LAG = ', lag_inf, '\n',
+      'B_0 = ', round(deceased_infected_lag_lm0$coefficients[[1]], 2), ', ',
+      'B_1 = ', round(deceased_infected_lag_lm0$coefficients[[2]], 2), '\n',
+      'R^2 = ', round(deceased_infected_lag_lm0_s$adj.r.squared, 5)
+      )
+  )
