@@ -24,7 +24,7 @@ source('COVID-19.R')
 
 p1 <- proc_period(df0, '2020-04-02', '2020-04-19')
 p2 <- proc_period(df0, '2020-04-20', '2020-05-10')
-p3 <- proc_period(df0, '2020-05-11', '2020-05-31')
+p3 <- proc_period(df0, '2020-05-11', '2020-06-30')
 ```
 
 # Период с `r min(p1$df$date)` по `r max(p1$df$date)`
