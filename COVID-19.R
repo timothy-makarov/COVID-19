@@ -127,28 +127,11 @@ df0$deceased_rate <- round((df0$deceased / lag(df0$deceased) - 1) * 100, 2)
 # Removed
 df0$removed <- df0$recovered + df0$deceased
 
+# Active cases
+df0$active <- df0$infected - df0$removed
 
 #
 # EDA
 #
-lag_inf <- 1
-df0$infected_lag <- lag(df0$infected, lag_inf)
-deceased_infected_lag_lm0 <- lm(formula = deceased ~ infected_lag, df0)
-df0$deceased_infected_lag_lm0 <- round(predict(deceased_infected_lag_lm0, df0))
-deceased_infected_lag_lm0_s <- summary(deceased_infected_lag_lm0)
-df0$deceased_infected_lag_lm0_err <- round((df0$deceased_infected_lag_lm0 / df0$deceased - 1) * 100, 2)
-
 ggplot(df0) +
-  geom_point(aes(infected_lag, deceased)) +
-  geom_line(aes(infected_lag, deceased_infected_lag_lm0), color = 'red') +
-  annotate(
-    'text',
-    x = 5e+4,
-    y = 3e+3,
-    label = paste0(
-      'LAG = ', lag_inf, '\n',
-      'B_0 = ', round(deceased_infected_lag_lm0$coefficients[[1]], 2), ', ',
-      'B_1 = ', round(deceased_infected_lag_lm0$coefficients[[2]], 2), '\n',
-      'R^2 = ', round(deceased_infected_lag_lm0_s$adj.r.squared, 5)
-      )
-  )
+  geom_col(aes(date, active))
